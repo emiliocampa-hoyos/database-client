@@ -3,6 +3,11 @@ const findAll = require("./find-all");
 const findById = require("./find-by-id");
 const findBy = require("./find-by");
 
+//Connecting to Database
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://emilioc:emilioc4@ds227185.mlab.com:27185/emiliocampa-hoyos', {useNewUrlParser: true});
+
+
 const readline = require('readline').createInterface({
   input: process.stdin,
   output: process.stdout
@@ -16,6 +21,11 @@ function printMenu(){
   console.log("4. Find a thing by");
   console.log("5. Exit");
   getMenuInput();
+}
+
+function printResult(result) {
+  console.log("Result: ");
+  console.log(result);
 }
 
 
@@ -50,7 +60,8 @@ function askForInput(){
         newThing.age = answer;
         readline.question("What is the occupation?", function(answer) {
           newThing.occupation = answer;
-          create(newThing,()=>{
+          create(newThing,(result)=>{
+            printResult(result);
             printMenu();
           });
         });
@@ -62,15 +73,15 @@ function createThing(){
   askForInput();
 }
 function findAllThings(){
-  findAll((data)=>{
-    //show data
+  findAll((result)=>{
+    printResult(result);
     printMenu();
   });
 }
 function findThingById(){
   readline.question("What is the id?", function(answer) {
     findById(answer,(result)=>{
-      //print the result
+      printResult(result);
       printMenu();
     });
   });
@@ -80,7 +91,7 @@ function findThingById(){
 function findThing(){
   readline.question("What name do you want to find?", function(answer) {
     findBy(answer,(result)=>{
-      //print the result
+      printResult(result);
       printMenu();
     });
   });
